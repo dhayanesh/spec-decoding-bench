@@ -67,7 +67,7 @@ sampling used the PyTorch-native sampler.
 Run one method:
 
 ```bash
-cd /workspace/gpt_oss_benchmark
+cd spec-decoding-bench
 python3 inference_eagle3.py
 python3 inference_suffix_decoding.py
 python3 inference_dflash.py
@@ -76,14 +76,14 @@ python3 inference_dflash.py
 Run all methods:
 
 ```bash
-cd /workspace/gpt_oss_benchmark
+cd spec-decoding-bench
 python3 run_all.py
 ```
 
 Create the summary graph:
 
 ```bash
-cd /workspace/gpt_oss_benchmark
+cd spec-decoding-bench
 python3 plot_results.py
 ```
 

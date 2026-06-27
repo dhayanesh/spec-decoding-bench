@@ -16,7 +16,7 @@
       "min": 0.35233446187339723,
       "max": 1.293960708891973
     },
-    "server_log": "/workspace/gpt_oss_benchmark/results/eagle3_sequential.log"
+    "server_log": "results/eagle3_sequential.log"
   },
   {
     "method": "eagle3",
@@ -35,6 +35,6 @@
       "min": 0.5228671000804752,
       "max": 2.9616991821676493
     },
-    "server_log": "/workspace/gpt_oss_benchmark/results/eagle3_parallel.log"
+    "server_log": "results/eagle3_parallel.log"
   }
 ]

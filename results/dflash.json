@@ -16,7 +16,7 @@
       "min": 0.18138621607795358,
       "max": 0.5979119909461588
     },
-    "server_log": "/workspace/gpt_oss_benchmark/results/dflash_sequential.log"
+    "server_log": "results/dflash_sequential.log"
   },
   {
     "method": "dflash",
@@ -35,6 +35,6 @@
       "min": 0.27250147284939885,
       "max": 1.4466790359001607
     },
-    "server_log": "/workspace/gpt_oss_benchmark/results/dflash_parallel.log"
+    "server_log": "results/dflash_parallel.log"
   }
 ]
