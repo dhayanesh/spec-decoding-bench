@@ -46,6 +46,20 @@ Each method uses 8 warmup requests before measurement.
 | DFlash | Sequential | 66.80s | 2.99 | 362.97 | 0.334s | 0.552s |
 | DFlash | Parallel | 13.82s | 14.47 | 1776.10 | 0.538s | 1.017s |
 
+## Backends
+
+Backend selection from the saved vLLM startup logs:
+
+| Method | Target attention | Target MoE | Draft attention |
+|---|---|---|---|
+| EAGLE3 | `TRITON_ATTN` | `MARLIN` Mxfp4 | `FLASH_ATTN` / FlashAttention v2 |
+| Suffix decoding | `TRITON_ATTN` | `MARLIN` Mxfp4 | none |
+| DFlash | `TRITON_ATTN` | `MARLIN` Mxfp4 | `FLASH_ATTN` / FlashAttention v2 |
+
+The target GPT-OSS-20B model used `MoEPrepareAndFinalizeNoDPEPModular` for MoE
+prepare/finalize. FlashInfer top-p/top-k sampling was disabled for all runs, so
+sampling used the PyTorch-native sampler.
+
 ## Commands
 
 Run one method:
