@@ -46,6 +46,8 @@ Each method uses 8 warmup requests before measurement.
 | DFlash | Sequential | 66.80s | 2.99 | 362.97 | 0.334s | 0.552s |
 | DFlash | Parallel | 13.82s | 14.47 | 1776.10 | 0.538s | 1.017s |
 
+![Benchmark summary](results/benchmark_summary.png)
+
 ## Backends
 
 Backend selection from the saved vLLM startup logs:
@@ -76,6 +78,13 @@ Run all methods:
 ```bash
 cd /workspace/gpt_oss_benchmark
 python3 run_all.py
+```
+
+Create the summary graph:
+
+```bash
+cd /workspace/gpt_oss_benchmark
+python3 plot_results.py
 ```
 
 ## Notes
