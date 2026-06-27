@@ -1,7 +1,7 @@
 # GPT-OSS-20B Speculative Decoding Benchmark
 
 Inference-time benchmark for GPT-OSS-20B with EAGLE3, Arctic suffix decoding,
-and DFlash.
+and DFlash. (benchmark-feb26 branch has comparison between Draft and EAGLE3)
 
 ## Dataset
 
