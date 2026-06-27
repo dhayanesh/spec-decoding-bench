@@ -16,15 +16,8 @@ The first 200 rows are formatted as agent JSON tool-call generation requests.
 
 ## Code Layout
 
-- `inference_eagle3.py` downloads the base and EAGLE3 draft models, starts vLLM
-  with the EAGLE3 speculative config, runs both benchmark phases, and saves
-  `results/eagle3.json`.
-- `inference_suffix_decoding.py` downloads the base model, starts vLLM with
-  Arctic suffix decoding, runs both benchmark phases, and saves
-  `results/suffix_decoding.json`.
-- `inference_dflash.py` downloads the base and DFlash draft models, starts vLLM
-  with the DFlash speculative config, runs both benchmark phases, and saves
-  `results/dflash.json`.
+- `inference_*.py` downloads the base and draft models, starts vLLM
+  with speculative config, runs both benchmark phases, and saves the results.
 - `benchmark.py` loads BFCL prompts, sends OpenAI-compatible chat completion
   requests, and calculates latency/throughput metrics.
 
@@ -96,3 +89,5 @@ image has `curand.h` under the Python NVIDIA package path instead of
 DFlash uses `--disable-hybrid-kv-cache-manager` so its draft attention layers
 stay in a compatible KV cache group on GPT-OSS's hybrid sliding/full attention
 layout.
+
+Also, GPT-OSS doesn't support flashinfer attention backend due to sink attention.
