@@ -1,0 +1,40 @@
+[
+  {
+    "method": "suffix_decoding",
+    "phase": "sequential",
+    "requests": 200,
+    "max_num_seqs": 1,
+    "total_seconds": 98.24928282992914,
+    "requests_per_second": 2.0356382686904975,
+    "completion_tokens_per_second": 255.23850431975805,
+    "prompt_tokens": 48476,
+    "completion_tokens": 25077,
+    "latency_seconds": {
+      "mean": 0.4911669396760408,
+      "median": 0.4600920184748247,
+      "p95": 0.8805366082931869,
+      "min": 0.14198927604593337,
+      "max": 1.072496464010328
+    },
+    "server_log": "/workspace/gpt_oss_benchmark/results/suffix_decoding_sequential.log"
+  },
+  {
+    "method": "suffix_decoding",
+    "phase": "parallel",
+    "requests": 200,
+    "max_num_seqs": 8,
+    "total_seconds": 17.50623136595823,
+    "requests_per_second": 11.424503413619355,
+    "completion_tokens_per_second": 1431.0332975899603,
+    "prompt_tokens": 48476,
+    "completion_tokens": 25052,
+    "latency_seconds": {
+      "mean": 0.6912071645678952,
+      "median": 0.6582377239828929,
+      "p95": 1.1068962338962591,
+      "min": 0.24886567005887628,
+      "max": 1.5410212639253587
+    },
+    "server_log": "/workspace/gpt_oss_benchmark/results/suffix_decoding_parallel.log"
+  }
+]

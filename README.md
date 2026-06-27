@@ -1,74 +1,75 @@
-# Speculative Decoding Experiments
+# GPT-OSS-20B Speculative Decoding Benchmark
 
-This repo contains two experiment tracks:
+Inference-time benchmark for GPT-OSS-20B with EAGLE3, Arctic suffix decoding,
+and DFlash.
 
-- `comparison/`: direct comparison of `base` vs `draft_model` vs `eagle3`
-- `acceptance_analysis/`: prompt-type/length study and simple GPU resource checks
+## Dataset
 
-## Models Used
+BFCL v3 prompts from `gorilla-llm/Berkeley-Function-Calling-Leaderboard`:
 
-- Target model: `Qwen/Qwen3-8B`
-- Draft model (`draft_model`): `Qwen/Qwen3-0.6B`
-- EAGLE3 model (`eagle3`): `Tengyunw/qwen3_8b_eagle3`
+- `BFCL_v3_simple.json`
+- `BFCL_v3_multiple.json`
+- `BFCL_v3_parallel.json`
+- `BFCL_v3_parallel_multiple.json`
 
-## Shared Core Config
+The first 200 rows are formatted as agent JSON tool-call generation requests.
 
-- `TENSOR_PARALLEL_SIZE=1`
-- `DRAFT_TENSOR_PARALLEL_SIZE=1`
-- `GPU_MEMORY_UTILIZATION=0.88`
-- `MAX_MODEL_LEN=4096`
-- `num_speculative_tokens=4` (speculative runs)
-- Sampling: `temperature=0.0`, `top_p=1.0`
+## Code Layout
 
-## base vs draft_model - Initial Comparison Results
+- `inference_eagle3.py` downloads the base and EAGLE3 draft models, starts vLLM
+  with the EAGLE3 speculative config, runs both benchmark phases, and saves
+  `results/eagle3.json`.
+- `inference_suffix_decoding.py` downloads the base model, starts vLLM with
+  Arctic suffix decoding, runs both benchmark phases, and saves
+  `results/suffix_decoding.json`.
+- `inference_dflash.py` downloads the base and DFlash draft models, starts vLLM
+  with the DFlash speculative config, runs both benchmark phases, and saves
+  `results/dflash.json`.
+- `benchmark.py` loads BFCL prompts, sends OpenAI-compatible chat completion
+  requests, and calculates latency/throughput metrics.
 
-Single-run snapshot:
+## Runs
 
-- without spec latency: `27.777s`
-- with spec latency: `14.141s`
-- speedup: `1.964x`
+Each method uses 8 warmup requests before measurement.
 
-5-trial:
+- Sequential: 200 requests, `--max-num-seqs 1`
+- Parallel: 200 requests, concurrency 8, `--max-num-seqs 8`
 
-- without spec:
-  - input tokens: `2477`
-  - output tokens: `512`
-  - latency mean/std: `27.783s ± 0.006`
-  - throughput mean/std: `18.43 ± 0.00 tok/s`
+## Results
 
-- with spec:
-  - input tokens: `2477`
-  - output tokens: `512`
-  - latency mean/std: `14.131s ± 0.003`
-  - throughput mean/std: `36.23 ± 0.01 tok/s`
+| Method | Phase | Total time | Req/s | Completion tok/s | Mean latency | P95 latency |
+|---|---|---:|---:|---:|---:|---:|
+| EAGLE3 | Sequential | 138.30s | 1.45 | 164.90 | 0.691s | 1.080s |
+| EAGLE3 | Parallel | 26.26s | 7.62 | 837.93 | 1.022s | 1.676s |
+| Suffix decoding | Sequential | 98.25s | 2.04 | 255.24 | 0.491s | 0.881s |
+| Suffix decoding | Parallel | 17.51s | 11.42 | 1431.03 | 0.691s | 1.107s |
+| DFlash | Sequential | 66.80s | 2.99 | 362.97 | 0.334s | 0.552s |
+| DFlash | Parallel | 13.82s | 14.47 | 1776.10 | 0.538s | 1.017s |
 
+## Commands
 
-## base vs draft_model vs eagle3 - Comparison Results (`comparison/README.md`)
+Run one method:
 
-### Normal inference
-| Technique | Inference time (s) | Acceptance | Accepted / Draft tokens | Mean acceptance length |
-|---|---:|---:|---:|---:|
-| base | 14.868 | n/a | n/a | n/a |
-| draft_model | 9.663 | 43.82% | 326 / 744 | 2.75 |
-| eagle3 | 8.716 | 27.57% | 268 / 972 | 2.10 |
+```bash
+cd /workspace/gpt_oss_benchmark
+python3 inference_eagle3.py
+python3 inference_suffix_decoding.py
+python3 inference_dflash.py
+```
 
-### Summarization inference
-| Technique | Inference time (s) | Acceptance | Accepted / Draft tokens | Mean acceptance length |
-|---|---:|---:|---:|---:|
-| base | 15.610 | n/a | n/a | n/a |
-| draft_model | 9.245 | 50.59% | 342 / 676 | 3.02 |
-| eagle3 | 8.886 | 32.92% | 291 / 884 | 2.32 |
+Run all methods:
 
-## Acceptance Results (`acceptance_analysis/README.md`)
+```bash
+cd /workspace/gpt_oss_benchmark
+python3 run_all.py
+```
 
-### Prompt-type/length study (8 cases)
-| Case | Category | Prompt tokens | Base time (s) | Draft time (s) | Draft acc (%) | Eagle3 time (s) | Eagle3 acc (%) |
-|---|---|---:|---:|---:|---:|---:|---:|
-| short_definition | factual_short | 11 | 2.801 | 2.207 | 39.86 | 1.835 | 22.50 |
-| structured_json | structured_output | 41 | 2.805 | 1.696 | 64.81 | 1.594 | 31.98 |
-| code_generation | code | 23 | 5.590 | 3.216 | 51.59 | 3.433 | 25.26 |
-| creative_writing | creative_openended | 18 | 7.446 | 3.601 | 65.14 | 4.193 | 29.49 |
-| reasoning_math | reasoning | 48 | 6.516 | 3.624 | 60.98 | 4.180 | 23.06 |
-| translation | translation | 23 | 2.803 | 1.585 | 51.61 | 1.884 | 20.67 |
-| summary_medium | long_context_summary | 622 | 7.552 | 3.643 | 66.20 | 3.264 | 48.28 |
-| summary_long | long_context_summary | 2350 | 7.845 | 4.177 | 60.00 | 4.289 | 35.71 |
+## Notes
+
+`VLLM_USE_FLASHINFER_SAMPLER=0` is set inside the vLLM subprocess because this
+image has `curand.h` under the Python NVIDIA package path instead of
+`/usr/local/cuda/include`, which breaks FlashInfer sampler JIT.
+
+DFlash uses `--disable-hybrid-kv-cache-manager` so its draft attention layers
+stay in a compatible KV cache group on GPT-OSS's hybrid sliding/full attention
+layout.

@@ -1,0 +1,40 @@
+[
+  {
+    "method": "dflash",
+    "phase": "sequential",
+    "requests": 200,
+    "max_num_seqs": 1,
+    "total_seconds": 66.80435238801874,
+    "requests_per_second": 2.993816912382339,
+    "completion_tokens_per_second": 362.9703624572348,
+    "prompt_tokens": 48476,
+    "completion_tokens": 24248,
+    "latency_seconds": {
+      "mean": 0.3339448307058774,
+      "median": 0.31051026843488216,
+      "p95": 0.551626669568941,
+      "min": 0.18138621607795358,
+      "max": 0.5979119909461588
+    },
+    "server_log": "/workspace/gpt_oss_benchmark/results/dflash_sequential.log"
+  },
+  {
+    "method": "dflash",
+    "phase": "parallel",
+    "requests": 200,
+    "max_num_seqs": 8,
+    "total_seconds": 13.822398596908897,
+    "requests_per_second": 14.469268745058907,
+    "completion_tokens_per_second": 1776.102738455981,
+    "prompt_tokens": 48476,
+    "completion_tokens": 24550,
+    "latency_seconds": {
+      "mean": 0.5377141939802095,
+      "median": 0.49797294347081333,
+      "p95": 1.0170109700062313,
+      "min": 0.27250147284939885,
+      "max": 1.4466790359001607
+    },
+    "server_log": "/workspace/gpt_oss_benchmark/results/dflash_parallel.log"
+  }
+]
