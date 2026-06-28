@@ -5,6 +5,7 @@ import signal
 import subprocess
 import time
 from pathlib import Path
+from typing import Any
 
 import httpx
 from huggingface_hub import snapshot_download
@@ -20,20 +21,55 @@ from settings import (
 )
 
 
-METHOD = "suffix_decoding"
-PORT = 8102
-SPEC_CONFIG = {
-    "method": "suffix",
-    "num_speculative_tokens": int(os.getenv("SUFFIX_NUM_SPECULATIVE_TOKENS", "24")),
-    "suffix_decoding_max_tree_depth": int(
-        os.getenv("SUFFIX_MAX_TREE_DEPTH", "24")
-    ),
-    "suffix_decoding_max_cached_requests": int(
-        os.getenv("SUFFIX_MAX_CACHED_REQUESTS", "100000")
-    ),
-    "suffix_decoding_max_spec_factor": float(os.getenv("SUFFIX_MAX_SPEC_FACTOR", "1.0")),
-    "suffix_decoding_min_token_prob": float(os.getenv("SUFFIX_MIN_TOKEN_PROB", "0.1")),
-}
+SWEEP_REQUESTS = 48
+PORT = 8111
+SWEEP_CONFIGS = [
+    {
+        "label": "suffix_t8_p005_f1",
+        "method": "suffix",
+        "num_speculative_tokens": 8,
+        "suffix_decoding_max_tree_depth": 8,
+        "suffix_decoding_max_cached_requests": 100000,
+        "suffix_decoding_max_spec_factor": 1.0,
+        "suffix_decoding_min_token_prob": 0.05,
+    },
+    {
+        "label": "suffix_t12_p005_f1",
+        "method": "suffix",
+        "num_speculative_tokens": 12,
+        "suffix_decoding_max_tree_depth": 12,
+        "suffix_decoding_max_cached_requests": 100000,
+        "suffix_decoding_max_spec_factor": 1.0,
+        "suffix_decoding_min_token_prob": 0.05,
+    },
+    {
+        "label": "suffix_t16_p01_f1",
+        "method": "suffix",
+        "num_speculative_tokens": 16,
+        "suffix_decoding_max_tree_depth": 16,
+        "suffix_decoding_max_cached_requests": 100000,
+        "suffix_decoding_max_spec_factor": 1.0,
+        "suffix_decoding_min_token_prob": 0.1,
+    },
+    {
+        "label": "suffix_t16_p005_f15",
+        "method": "suffix",
+        "num_speculative_tokens": 16,
+        "suffix_decoding_max_tree_depth": 16,
+        "suffix_decoding_max_cached_requests": 100000,
+        "suffix_decoding_max_spec_factor": 1.5,
+        "suffix_decoding_min_token_prob": 0.05,
+    },
+    {
+        "label": "suffix_t24_p01_f1",
+        "method": "suffix",
+        "num_speculative_tokens": 24,
+        "suffix_decoding_max_tree_depth": 24,
+        "suffix_decoding_max_cached_requests": 100000,
+        "suffix_decoding_max_spec_factor": 1.0,
+        "suffix_decoding_min_token_prob": 0.1,
+    },
+]
 
 
 def download_models() -> None:
@@ -47,7 +83,7 @@ def server_env() -> dict[str, str]:
     return env
 
 
-def server_command(max_num_seqs: int) -> list[str]:
+def server_command(spec_config: dict[str, Any]) -> list[str]:
     return [
         "vllm",
         "serve",
@@ -55,9 +91,12 @@ def server_command(max_num_seqs: int) -> list[str]:
         "--port",
         str(PORT),
         "--max-num-seqs",
-        str(max_num_seqs),
+        str(PARALLELISM),
         "--speculative-config",
-        json.dumps(SPEC_CONFIG, separators=(",", ":")),
+        json.dumps(
+            {k: v for k, v in spec_config.items() if k != "label"},
+            separators=(",", ":"),
+        ),
         *COMMON_SERVER_ARGS,
     ]
 
@@ -85,18 +124,18 @@ async def wait_for_server(
     raise RuntimeError(f"Server did not become ready. Log: {log_path}")
 
 
-async def benchmark_with_server(
-    phase: str,
-    max_num_seqs: int,
+async def run_one_config(
+    spec_config: dict[str, Any],
     prompts: list[list[dict[str, str]]],
-) -> dict:
+) -> dict[str, Any]:
     RESULTS_DIR.mkdir(exist_ok=True)
-    log_path = RESULTS_DIR / f"{METHOD}_{phase}.log"
+    label = spec_config["label"]
+    log_path = RESULTS_DIR / f"sweep_{label}.log"
     base_url = f"http://{HOST}:{PORT}"
 
     with open(log_path, "w", encoding="utf-8") as log:
         process = subprocess.Popen(
-            server_command(max_num_seqs),
+            server_command(spec_config),
             stdout=log,
             stderr=subprocess.STDOUT,
             text=True,
@@ -106,7 +145,16 @@ async def benchmark_with_server(
     try:
         await wait_for_server(base_url, log_path, process)
         await run_sequential(base_url, prompts[:WARMUP_REQUESTS])
-        result = await run_phase(METHOD, phase, base_url, max_num_seqs, prompts)
+        result = await run_phase(
+            "suffix_decoding",
+            label,
+            base_url,
+            PARALLELISM,
+            prompts[:SWEEP_REQUESTS],
+        )
+        result["spec_config"] = {
+            k: v for k, v in spec_config.items() if k != "label"
+        }
         result["server_log"] = str(log_path)
         return result
     finally:
@@ -122,12 +170,12 @@ async def main() -> None:
     prompts = load_prompts()
     download_models()
 
-    results = [
-        await benchmark_with_server("sequential", 1, prompts),
-        await benchmark_with_server("parallel", PARALLELISM, prompts),
-    ]
+    results = []
+    for spec_config in SWEEP_CONFIGS:
+        print(f"Running sweep config {spec_config['label']}")
+        results.append(await run_one_config(spec_config, prompts))
 
-    out_path = RESULTS_DIR / f"{METHOD}.json"
+    out_path = RESULTS_DIR / "suffix_config_sweep.json"
     out_path.write_text(json.dumps(results, indent=2), encoding="utf-8")
     print(json.dumps(results, indent=2))
     print(f"result_file={out_path}")

@@ -1,0 +1,137 @@
+[
+  {
+    "method": "suffix_decoding",
+    "phase": "suffix_t8_p005_f1",
+    "requests": 48,
+    "max_num_seqs": 8,
+    "total_seconds": 3.7383140709716827,
+    "requests_per_second": 12.840012660446044,
+    "completion_tokens_per_second": 1374.951355722764,
+    "prompt_tokens": 11284,
+    "completion_tokens": 5140,
+    "latency_seconds": {
+      "mean": 0.5785459388862364,
+      "median": 0.5738915505353361,
+      "p95": 1.0366984311607665,
+      "min": 0.25921822316013277,
+      "max": 1.1698248779866844
+    },
+    "spec_config": {
+      "method": "suffix",
+      "num_speculative_tokens": 8,
+      "suffix_decoding_max_tree_depth": 8,
+      "suffix_decoding_max_cached_requests": 100000,
+      "suffix_decoding_max_spec_factor": 1.0,
+      "suffix_decoding_min_token_prob": 0.05
+    },
+    "server_log": "/workspace/spec-decoding-bench/results/sweep_suffix_t8_p005_f1.log"
+  },
+  {
+    "method": "suffix_decoding",
+    "phase": "suffix_t12_p005_f1",
+    "requests": 48,
+    "max_num_seqs": 8,
+    "total_seconds": 3.8829623819328845,
+    "requests_per_second": 12.361695859671519,
+    "completion_tokens_per_second": 1363.6495745200145,
+    "prompt_tokens": 11284,
+    "completion_tokens": 5295,
+    "latency_seconds": {
+      "mean": 0.5807280872007444,
+      "median": 0.5950656299246475,
+      "p95": 0.9588969669654034,
+      "min": 0.18535008607432246,
+      "max": 1.1236592228524387
+    },
+    "spec_config": {
+      "method": "suffix",
+      "num_speculative_tokens": 12,
+      "suffix_decoding_max_tree_depth": 12,
+      "suffix_decoding_max_cached_requests": 100000,
+      "suffix_decoding_max_spec_factor": 1.0,
+      "suffix_decoding_min_token_prob": 0.05
+    },
+    "server_log": "/workspace/spec-decoding-bench/results/sweep_suffix_t12_p005_f1.log"
+  },
+  {
+    "method": "suffix_decoding",
+    "phase": "suffix_t16_p01_f1",
+    "requests": 48,
+    "max_num_seqs": 8,
+    "total_seconds": 3.9772963849827647,
+    "requests_per_second": 12.06849964242934,
+    "completion_tokens_per_second": 1352.4262411797379,
+    "prompt_tokens": 11284,
+    "completion_tokens": 5379,
+    "latency_seconds": {
+      "mean": 0.5768600159402316,
+      "median": 0.5572953895898536,
+      "p95": 1.0002735494985244,
+      "min": 0.18119400180876255,
+      "max": 1.0916490338277072
+    },
+    "spec_config": {
+      "method": "suffix",
+      "num_speculative_tokens": 16,
+      "suffix_decoding_max_tree_depth": 16,
+      "suffix_decoding_max_cached_requests": 100000,
+      "suffix_decoding_max_spec_factor": 1.0,
+      "suffix_decoding_min_token_prob": 0.1
+    },
+    "server_log": "/workspace/spec-decoding-bench/results/sweep_suffix_t16_p01_f1.log"
+  },
+  {
+    "method": "suffix_decoding",
+    "phase": "suffix_t16_p005_f15",
+    "requests": 48,
+    "max_num_seqs": 8,
+    "total_seconds": 3.8081764669623226,
+    "requests_per_second": 12.604457912185008,
+    "completion_tokens_per_second": 1395.1559351549781,
+    "prompt_tokens": 11284,
+    "completion_tokens": 5313,
+    "latency_seconds": {
+      "mean": 0.5592920779939353,
+      "median": 0.5801177665125579,
+      "p95": 1.0322947972570546,
+      "min": 0.17473281105048954,
+      "max": 1.0524825691245496
+    },
+    "spec_config": {
+      "method": "suffix",
+      "num_speculative_tokens": 16,
+      "suffix_decoding_max_tree_depth": 16,
+      "suffix_decoding_max_cached_requests": 100000,
+      "suffix_decoding_max_spec_factor": 1.5,
+      "suffix_decoding_min_token_prob": 0.05
+    },
+    "server_log": "/workspace/spec-decoding-bench/results/sweep_suffix_t16_p005_f15.log"
+  },
+  {
+    "method": "suffix_decoding",
+    "phase": "suffix_t24_p01_f1",
+    "requests": 48,
+    "max_num_seqs": 8,
+    "total_seconds": 3.73293791199103,
+    "requests_per_second": 12.85850478407725,
+    "completion_tokens_per_second": 1415.5070683138372,
+    "prompt_tokens": 11284,
+    "completion_tokens": 5284,
+    "latency_seconds": {
+      "mean": 0.5567830244302362,
+      "median": 0.5921623054891825,
+      "p95": 0.9722816640045494,
+      "min": 0.14133135485462844,
+      "max": 1.0525277499109507
+    },
+    "spec_config": {
+      "method": "suffix",
+      "num_speculative_tokens": 24,
+      "suffix_decoding_max_tree_depth": 24,
+      "suffix_decoding_max_cached_requests": 100000,
+      "suffix_decoding_max_spec_factor": 1.0,
+      "suffix_decoding_min_token_prob": 0.1
+    },
+    "server_log": "/workspace/spec-decoding-bench/results/sweep_suffix_t24_p01_f1.log"
+  }
+]

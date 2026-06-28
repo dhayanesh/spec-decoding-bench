@@ -26,7 +26,7 @@ PORT = 8101
 SPEC_CONFIG = {
     "method": "eagle3",
     "model": EAGLE3_MODEL,
-    "num_speculative_tokens": 4,
+    "num_speculative_tokens": int(os.getenv("EAGLE3_NUM_SPECULATIVE_TOKENS", "6")),
 }
 
 

@@ -4,8 +4,8 @@ from pathlib import Path
 BASE_MODEL = "openai/gpt-oss-20b"
 SERVED_MODEL = "gpt-oss-20b"
 
-EAGLE3_MODEL = "zhuyksir/EAGLE3-gpt-oss-20b-bf16"
-DFLASH_MODEL = "jianchen0311/gpt-oss-20b-DFlash"
+EAGLE3_MODEL = "RedHatAI/gpt-oss-20b-speculator.eagle3"
+DFLASH_MODEL = "z-lab/gpt-oss-20b-DFlash"
 
 HOST = "127.0.0.1"
 MAX_MODEL_LEN = 4096

@@ -1,0 +1,124 @@
+[
+  {
+    "method": "eagle3",
+    "phase": "eagle3_t2",
+    "requests": 48,
+    "max_num_seqs": 8,
+    "total_seconds": 4.7495101019740105,
+    "requests_per_second": 10.106305486127937,
+    "completion_tokens_per_second": 1083.9012633872212,
+    "prompt_tokens": 11284,
+    "completion_tokens": 5148,
+    "latency_seconds": {
+      "mean": 0.7365422085034273,
+      "median": 0.6146546399686486,
+      "p95": 1.5625575873069466,
+      "min": 0.32857691403478384,
+      "max": 1.7570949748624116
+    },
+    "spec_config": {
+      "method": "eagle3",
+      "model": "RedHatAI/gpt-oss-20b-speculator.eagle3",
+      "num_speculative_tokens": 2
+    },
+    "server_log": "/workspace/spec-decoding-bench/results/sweep_eagle3_t2.log"
+  },
+  {
+    "method": "eagle3",
+    "phase": "eagle3_t4",
+    "requests": 48,
+    "max_num_seqs": 8,
+    "total_seconds": 4.123951102839783,
+    "requests_per_second": 11.63932326136138,
+    "completion_tokens_per_second": 1284.9327908740406,
+    "prompt_tokens": 11284,
+    "completion_tokens": 5299,
+    "latency_seconds": {
+      "mean": 0.6484723666944774,
+      "median": 0.5801503834081814,
+      "p95": 1.235823455278296,
+      "min": 0.3503718439023942,
+      "max": 1.416605161037296
+    },
+    "spec_config": {
+      "method": "eagle3",
+      "model": "RedHatAI/gpt-oss-20b-speculator.eagle3",
+      "num_speculative_tokens": 4
+    },
+    "server_log": "/workspace/spec-decoding-bench/results/sweep_eagle3_t4.log"
+  },
+  {
+    "method": "eagle3",
+    "phase": "eagle3_t6",
+    "requests": 48,
+    "max_num_seqs": 8,
+    "total_seconds": 3.75229026703164,
+    "requests_per_second": 12.792187326694163,
+    "completion_tokens_per_second": 1404.4755669099634,
+    "prompt_tokens": 11284,
+    "completion_tokens": 5270,
+    "latency_seconds": {
+      "mean": 0.5793237478840941,
+      "median": 0.5385135074611753,
+      "p95": 0.8738884863560088,
+      "min": 0.27760957507416606,
+      "max": 1.0177814790513366
+    },
+    "spec_config": {
+      "method": "eagle3",
+      "model": "RedHatAI/gpt-oss-20b-speculator.eagle3",
+      "num_speculative_tokens": 6
+    },
+    "server_log": "/workspace/spec-decoding-bench/results/sweep_eagle3_t6.log"
+  },
+  {
+    "method": "dflash",
+    "phase": "dflash_t4",
+    "requests": 48,
+    "max_num_seqs": 8,
+    "total_seconds": 4.48905835300684,
+    "requests_per_second": 10.692665638406964,
+    "completion_tokens_per_second": 1155.9217082852863,
+    "prompt_tokens": 11284,
+    "completion_tokens": 5189,
+    "latency_seconds": {
+      "mean": 0.6847584884574948,
+      "median": 0.5409433713648468,
+      "p95": 1.4865970705519431,
+      "min": 0.2905631160829216,
+      "max": 1.582458270015195
+    },
+    "spec_config": {
+      "method": "dflash",
+      "model": "z-lab/gpt-oss-20b-DFlash",
+      "num_speculative_tokens": 4,
+      "attention_backend": "FLASH_ATTN"
+    },
+    "server_log": "/workspace/spec-decoding-bench/results/sweep_dflash_t4.log"
+  },
+  {
+    "method": "dflash",
+    "phase": "dflash_t8",
+    "requests": 48,
+    "max_num_seqs": 8,
+    "total_seconds": 3.3173873270861804,
+    "requests_per_second": 14.469217871571448,
+    "completion_tokens_per_second": 1580.4606104301897,
+    "prompt_tokens": 11284,
+    "completion_tokens": 5243,
+    "latency_seconds": {
+      "mean": 0.5064592909087272,
+      "median": 0.4877515526022762,
+      "p95": 0.8334133667405694,
+      "min": 0.26134430686943233,
+      "max": 0.8805771588813514
+    },
+    "spec_config": {
+      "method": "dflash",
+      "model": "z-lab/gpt-oss-20b-DFlash",
+      "num_speculative_tokens": 8,
+      "attention_backend": "FLASH_ATTN"
+    },
+    "server_log": "/workspace/spec-decoding-bench/results/sweep_dflash_t8.log"
+  }
+]
